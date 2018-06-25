@@ -52,7 +52,7 @@ def getIcon(iconame):
         iconame = list(iconame)
         iconame[1] = "P"
         iconame = "".join(iconame)
-    pathname = "E:\\Projects\\Python\\Fantastisk\\Chess\\" + iconame + ".png"
+    pathname = iconame + ".png"
     brook = pygame.image.load(pathname)
     brook = pygame.transform.scale(brook, (re, re))
     return brook
