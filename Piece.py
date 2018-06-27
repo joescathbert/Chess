@@ -16,38 +16,38 @@ class Piece:
 
 
 class Pawn(Piece):
-    def possiblemove(self, board, xax, yax):
+    def possiblemove(self, board, xax, yax, check):
         if board[xax][yax] is None:
             if self.name[0] == "B":
                 if self.piecemovecounter == 0:
                     if yax == self.y and xax == self.x + 2:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                 if yax == self.y and xax == self.x + 1:
-                    self.piecemovecounter += 1
+                    if check == 1: self.piecemovecounter += 1
                     return board[xax][yax]
             if self.name[0] == "W":
                 if self.piecemovecounter == 0:
                     if yax == self.y and xax == self.x - 2:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                 if yax == self.y and xax == self.x - 1:
-                    self.piecemovecounter += 1
+                    if check == 1: self.piecemovecounter += 1
                     return board[xax][yax]
         else:
             if self.name[0] == "B":
                 if xax == self.x + 1 and (yax == self.y + 1 or yax == self.y - 1) and board[xax][yax].name[0] == "W":
-                    self.piecemovecounter += 1
+                    if check == 1: self.piecemovecounter += 1
                     return board[xax][yax]
             if self.name[0] == "W":
                 if xax == self.x - 1 and (yax == self.y + 1 or yax == self.y - 1) and board[xax][yax].name[0] == "B":
-                    self.piecemovecounter += 1
+                    if check == 1: self.piecemovecounter += 1
                     return board[xax][yax]
         return 0
 
 
 class Rook(Piece):
-    def possiblemove(self, board, xax, yax):
+    def possiblemove(self, board, xax, yax, check):
         if xax == self.x:
             if yax > self.y:
                 for i in range(self.y + 1, yax):
@@ -55,10 +55,10 @@ class Rook(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
 
             elif yax < self.y:
@@ -67,10 +67,10 @@ class Rook(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
         elif yax == self.y:
             if xax > self.x:
@@ -79,10 +79,10 @@ class Rook(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
             elif xax < self.x:
                 for i in range(self.x - 1, xax, -1):
@@ -90,16 +90,16 @@ class Rook(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
         return 0
 
 
 class Bishop(Piece):
-    def possiblemove(self, board, xax, yax):
+    def possiblemove(self, board, xax, yax, check):
         if xax < self.x:
             if yax < self.y:
                 if self.x - xax == self.y - yax:
@@ -110,10 +110,10 @@ class Bishop(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
             elif yax > self.y:
                 if self.x - xax == yax - self.y:
@@ -123,10 +123,10 @@ class Bishop(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
 
         elif xax > self.x:
@@ -138,10 +138,10 @@ class Bishop(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
             elif yax > self.y:
                 if xax - self.x == yax - self.y:
@@ -152,16 +152,16 @@ class Bishop(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
         return 0
 
 
 class Queen(Piece):
-    def possiblemove(self, board, xax, yax):
+    def possiblemove(self, board, xax, yax, check):
         if xax == self.x:
             if yax > self.y:
                 for i in range(self.y + 1, yax):
@@ -169,10 +169,10 @@ class Queen(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
 
             elif yax < self.y:
@@ -181,10 +181,10 @@ class Queen(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
         elif yax == self.y:
             if xax > self.x:
@@ -193,10 +193,10 @@ class Queen(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
             elif xax < self.x:
                 for i in range(self.x - 1, xax, -1):
@@ -204,10 +204,10 @@ class Queen(Piece):
                         break
                 else:
                     if board[xax][yax] is None:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
                     elif board[xax][yax].name[0] != self.name[0]:
-                        self.piecemovecounter += 1
+                        if check == 1: self.piecemovecounter += 1
                         return board[xax][yax]
         elif xax < self.x:
             if yax < self.y:
@@ -219,10 +219,10 @@ class Queen(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
             elif yax > self.y:
                 if self.x - xax == yax - self.y:
@@ -232,10 +232,10 @@ class Queen(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
         elif xax > self.x:
             if yax < self.y:
@@ -246,10 +246,10 @@ class Queen(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
             elif yax > self.y:
                 if xax - self.x == yax - self.y:
@@ -260,34 +260,37 @@ class Queen(Piece):
                             break
                     else:
                         if board[xax][yax] is None:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
                         elif board[xax][yax].name[0] != self.name[0]:
-                            self.piecemovecounter += 1
+                            if check == 1: self.piecemovecounter += 1
                             return board[xax][yax]
         return 0
 
 
 class King(Piece):
-    def possiblemove(self, board, xax, yax):
-        if (xax == self.x - 1 and yax == self.y - 1) or (xax == self.x - 1 and yax == self.y) or (xax == self.x - 1 and yax == self.y + 1) or(xax == self.x and yax == self.y + 1) or(xax == self.x + 1 and yax == self.y + 1) or(xax == self.x + 1 and yax == self.y) or(xax == self.x + 1 and yax == self.y - 1) or(xax == self.x and yax == self.y - 1):
+    def possiblemove(self, board, xax, yax, check):
+        if (xax == self.x - 1 and yax == self.y - 1) or (xax == self.x - 1 and yax == self.y) or (
+                xax == self.x - 1 and yax == self.y + 1) or (xax == self.x and yax == self.y + 1) or (
+                xax == self.x + 1 and yax == self.y + 1) or (xax == self.x + 1 and yax == self.y) or (
+                xax == self.x + 1 and yax == self.y - 1) or (xax == self.x and yax == self.y - 1):
             if board[xax][yax] is None:
-                self.piecemovecounter += 1
+                if check == 1: self.piecemovecounter += 1
                 return board[xax][yax]
             elif board[xax][yax].name[0] != self.name[0]:
-                self.piecemovecounter += 1
+                if check == 1: self.piecemovecounter += 1
                 return board[xax][yax]
         return 0
 
 
 class Horse(Piece):
-    def possiblemove(self, board, xax, yax):
-        if ((self.x - xax == 2 or xax - self.x == 2) and (self.y - yax == 1 or yax - self.y == 1)) or ((self.x - xax == 1 or xax - self.x == 1) and (self.y - yax == 2 or yax - self.y == 2)):
+    def possiblemove(self, board, xax, yax, check):
+        if ((self.x - xax == 2 or xax - self.x == 2) and (self.y - yax == 1 or yax - self.y == 1)) or (
+                (self.x - xax == 1 or xax - self.x == 1) and (self.y - yax == 2 or yax - self.y == 2)):
             if board[xax][yax] is None:
-                self.piecemovecounter += 1
+                if check == 1: self.piecemovecounter += 1
                 return board[xax][yax]
             elif board[xax][yax].name[0] != self.name[0]:
-                self.piecemovecounter += 1
+                if check == 1: self.piecemovecounter += 1
                 return board[xax][yax]
         return 0
-
