@@ -29,9 +29,11 @@ boardPieceArray = [
     [Rook(7, 0, "WR"), Horse(7, 1, "WH"), Bishop(7, 2, "WB"), Queen(7, 3, "WQ"), King(7, 4, "WK"), Bishop(7, 5, "WB"),
      Horse(7, 6, "WH"), Rook(7, 7, "WR")]]
 boardDelArray = []
+menuIconArray = [None, None]
 
 
-def chessboard(x, y):
+# board generator
+def chessboard(x, y, selist):
     screen.fill(GRAY)
     boardColorArray = [['w', 'b', 'w', 'b', 'w', 'b', 'w', 'b'], ['b', 'w', 'b', 'w', 'b', 'w', 'b', 'w'],
                        ['w', 'b', 'w', 'b', 'w', 'b', 'w', 'b'], ['b', 'w', 'b', 'w', 'b', 'w', 'b', 'w'],
@@ -43,10 +45,15 @@ def chessboard(x, y):
                 pygame.draw.rect(screen, WHITE, pygame.Rect((i * re) + re, (j * re) + re, re, re))
             else:
                 pygame.draw.rect(screen, (32, 178, 170), pygame.Rect((i * re) + re, (j * re) + re, re, re))
-    selector(x, y, 4, NAVYBLUE)
+    selector(x, y, 4, BLACK)
+    if selist is not None:
+        for i in selist:
+            x, y = i
+            selector(x, y, 3, NAVYBLUE)
     setIcon()
 
 
+# fetches icon for the board
 def getIcon(iconame):
     if not iconame.isalpha():
         iconame = list(iconame)
@@ -58,16 +65,18 @@ def getIcon(iconame):
     return brook
 
 
+# sets icon in the screen
 def setIcon():
     for i in range(8):
         # temp = []
         for j in range(8):
-            if boardPieceArray[i][j] != None:
-                pieceIcon = getIcon(boardPieceArray[i][j].name)
-                boardPieceArray[i][j].img = pieceIcon
-                screen.blit(pieceIcon, ((j * re) + re, (i * re) + re))
+            if boardPieceArray[i][j] is not None:
+                if boardPieceArray[i][j].img is None:
+                    boardPieceArray[i][j].img = getIcon(boardPieceArray[i][j].name)
+                screen.blit(boardPieceArray[i][j].img, ((j * re) + re, (i * re) + re))
 
 
+# creates a hollow square
 def selector(x, y, wid, color):
     if x is not None and y is not None:
         pygame.draw.line(screen, color, ((y * re) + re - wid // 2, (x * re) + re),
@@ -95,6 +104,7 @@ def animate(a, b, x1, y1, x2, y2):
         clock.tick(10)
 
 
+# find the cell using coord
 def getBoxAtPixel(x, y):
     for i in range(8):
         for j in range(8):
@@ -111,8 +121,9 @@ def leftTopCoordsOfBox(i, j):
     return left, top
 
 
+# checks whether the move is valid and switches the turn if required
 def moveassigner(selecta, selectb, a, b, currentturn):
-    if boardPieceArray[selecta][selectb].possiblemove(boardPieceArray, a, b) != 0:
+    if boardPieceArray[selecta][selectb].possiblemove(boardPieceArray, a, b, 1) != 0:
         if boardPieceArray[a][b] is not None:
             boardDelArray.append(boardPieceArray[a][b])
         boardPieceArray[a][b] = boardPieceArray[selecta][selectb]
@@ -126,8 +137,9 @@ def moveassigner(selecta, selectb, a, b, currentturn):
         return currentturn
 
 
+# turns the pawn to queen that reaches the very end
 def pawnpower():
-    for i in range(0,8):
+    for i in range(0, 8):
         if boardPieceArray[0][i] is not None and boardPieceArray[7][i] is not None:
             if not boardPieceArray[0][i].name.isalpha():
                 boardPieceArray[0][i] = Queen(0, i, "WQ")
@@ -135,17 +147,76 @@ def pawnpower():
                 boardPieceArray[7][i] = Queen(7, i, "BQ")
 
 
+# fetches the menu icons
+def getmenuicon(iconame):
+    pat = iconame + ".png"
+    im = pygame.image.load(pat)
+    im = pygame.transform.scale(im, (3 * height // 10, int(1.5 * width / 10)))
+    return im
+
+
+# sets the menu icons
+def setmenuicon():
+    for i in range(2):
+        if menuIconArray[i] is None:
+            name = "menu" + str(i + 1)
+            menuIconArray[i] = getmenuicon(name)
+        screen.blit(menuIconArray[i], (int(6.5 * height / 10), int((i * 2 + 1) * width / 10)))
+
+
+# changes the specified menu color
+def changeimgcolor(i):
+    menuIconArray[i].fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
+    menuIconArray[i].fill((125, 0, 0) + (0,), None, pygame.BLEND_RGBA_ADD)
+
+
+# resets the specified menu color
+def resetimgcolor(n):
+    for i in range(2):
+        if i != n:
+            name = "menu" + str(i + 1)
+            menuIconArray[i] = getmenuicon(name)
+
+
+def getmenubox(x, y):
+    for i in range(2):
+        l, t = coords(i)
+        boxRect = pygame.Rect(l, t, 3 * height // 10, int(1.5 * width / 10))
+        if boxRect.collidepoint(x, y):
+            return i
+    return None
+
+
+def coords(y):
+    a = int(6.5 * height / 10)
+    b = int((y * 2 + 1) * width / 10)
+    return a, b
+
+
+def menudisp():
+    im = pygame.image.load("che.jpg")
+    im = pygame.transform.scale(im, (height, width))
+    screen.blit(im, (0, 0))
+    setmenuicon()
+
+
+def movelistgenerator(select1, select2):
+    temp = []
+    for i in range(8):
+        for j in range(8):
+            if boardPieceArray[select1][select2].possiblemove(boardPieceArray, i, j, 0) != 0:
+                temp.append((i, j))
+    return temp
+
+
 def chessb():
-    global screen, clock
     pygame.init()
     done = False
     motionstop = False
     currentturn = "W"
+    movelist = None
     selecta, selectb = None, None
-    screen = pygame.display.set_mode(windowsize)
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("Chess")
-    chessboard(selecta, selectb)
+    chessboard(selecta, selectb, movelist)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -153,20 +224,21 @@ def chessb():
             if event.type == pygame.MOUSEMOTION:
                 x, y = pygame.mouse.get_pos()
                 a, b = getBoxAtPixel(x, y)
-                chessboard(selecta, selectb)
+                chessboard(selecta, selectb, movelist)
                 if not motionstop:
                     selector(a, b, 4, BLUE)
                 else:
-                    selector(a, b, 2, BLUE)
+                    selector(a, b, 3, BLUE)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
                 a, b = getBoxAtPixel(x, y)
                 if (a is not None and b is not None) and not motionstop and boardPieceArray[a][b] is not None:
                     if boardPieceArray[a][b].name[0] == currentturn:
                         motionstop = True
-                        chessboard(selecta, selectb)
                         selecta, selectb = a, b
-                        selector(a, b, 5, NAVYBLUE)
+                        movelist = movelistgenerator(a, b)
+                        chessboard(selecta, selectb, movelist)
+                        selector(a, b, 5, BLACK)
                     else:
                         selector(a, b, 5, RED)
                 elif motionstop:
@@ -175,12 +247,40 @@ def chessb():
                     pawnpower()
                     tempa, tempb = selecta, selectb
                     selecta, selectb = None, None
+                    movelist = None
                     motionstop = False
-                    chessboard(selecta, selectb)
+                    chessboard(selecta, selectb, movelist)
                     if boardPieceArray[tempa][tempb] is not None:
                         selector(a, b, 5, RED)
-        pygame.display.flip()
+        pygame.display.update()
 
 
-    
-chessb()
+def mainmenu():
+    global screen
+    pygame.init()
+    screen = pygame.display.set_mode(windowsize)
+    done = False
+    menudisp()
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.MOUSEMOTION:
+                a, b = pygame.mouse.get_pos()
+                n = getmenubox(a, b)
+                if n is not None:
+                    changeimgcolor(n)
+                resetimgcolor(n)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                a, b = pygame.mouse.get_pos()
+                n = getmenubox(a, b)
+                if n == 0:
+                    chessb()
+                    done = True
+                elif n == 1:
+                    done = True
+        menudisp()
+        pygame.display.update()
+
+
+mainmenu()
