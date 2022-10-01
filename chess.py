@@ -1,5 +1,5 @@
 import pygame
-from Chess.Piece import *
+from Piece import Rook, Horse, Bishop, Queen, King, Pawn
 
 height, width = 1000, 600
 re = min(height // 10, width // 10)
@@ -128,7 +128,7 @@ def moveassigner(selecta, selectb, a, b, currentturn):
             boardDelArray.append(boardPieceArray[a][b])
         boardPieceArray[a][b] = boardPieceArray[selecta][selectb]
         boardPieceArray[selecta][selectb] = None
-        boardPieceArray[a][b].updatepos(a, b)
+        boardPieceArray[a][b].update_piece_position(a, b)
         if currentturn == "B":
             return "W"
         else:
